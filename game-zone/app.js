@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
 import react, {useState} from 'react';
 
 export default function App() {
@@ -9,11 +9,33 @@ export default function App() {
     setName("AYA");
   }
 
+  const [people, setPeople] = useState([
+    { name: "John", age: "16", key: "1"},
+    { name: "Alice", age: "12", key: "2"},
+    { name: "Bob", age: "10", key: "3"},
+    { name: "Aya", age: "25", key: "4"} ,
+    { name: "John", age: "16", key: "5"},
+    { name: "Alice", age: "12", key: "6"},
+    { name: "Bob", age: "10", key: "3"},
+    { name: "Aya", age: "25", key: "4"} 
+  ]);
+
   return (
     <View style={styles.container}>
       <View style={styles.boldText}>
         <Text>Hello there! my name is {name}</Text>
       </View>
+
+      <ScrollView>
+        {people.map((e) => {
+        return (
+          <View key={e.key}>
+            <Text style={styles.listNames}> Hello Mr/Mss {e.name}</Text>
+          </View>
+        )
+        })}
+      </ScrollView>
+      
 
       <TextInput 
         style={styles.inputText}
@@ -37,11 +59,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: '10%',
   },
   boldText: {
     backgroundColor: 'yellow',
     fontWeight: 'bold',
     padding: 50,
+    marginTop: '20%',
   },
   buttonContainer: {
     backgroundColor: 'lightblue',
@@ -57,5 +81,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     width: 200,
+  },
+  listNames: {
+    marginTop: 20,
+    padding: 30,
+    backgroundColor: 'pink',
+    color: 'black',
+    fontSize: '20',
   }
 });
