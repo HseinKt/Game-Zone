@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import react, {useState} from 'react';
 
 export default function App() {
@@ -9,15 +9,22 @@ export default function App() {
     setName("AYA");
   }
 
+  const HandleTouchable = (id) => {
+    console.log(id);
+    setPeople((itemPressed) => {
+      return itemPressed.filter(item => item.id != id)
+    })
+  }
+
   const [people, setPeople] = useState([
-    { name: "John", age: "16", key: "1"},
-    { name: "Alice", age: "12", key: "2"},
-    { name: "Bob", age: "10", key: "3"},
-    { name: "Aya", age: "25", key: "4"} ,
-    { name: "John", age: "16", key: "5"},
-    { name: "Alice", age: "12", key: "6"},
-    { name: "Bob", age: "10", key: "3"},
-    { name: "Aya", age: "25", key: "4"} 
+    { name: "John", age: "16", id: "1"},
+    { name: "Alice", age: "12", id: "2"},
+    { name: "Bob", age: "10", id: "3"},
+    { name: "Aya", age: "25", id: "4"} ,
+    { name: "John", age: "16", id: "5"},
+    { name: "Alice", age: "12", id: "6"},
+    { name: "Bob", age: "10", id: "7"},
+    { name: "Aya", age: "25", id: "8"} 
   ]);
 
   return (
@@ -26,7 +33,8 @@ export default function App() {
         <Text>Hello there! my name is {name}</Text>
       </View>
 
-      <ScrollView>
+      {/* ScrollView load all the items in the biginning and this is not helpfull when we have a large data */}
+      {/* <ScrollView>
         {people.map((e) => {
         return (
           <View key={e.key}>
@@ -34,14 +42,25 @@ export default function App() {
           </View>
         )
         })}
-      </ScrollView>
-      
+      </ScrollView> */}
+
+       {/* Another way to scroll the items is using a flat list, and here not all the items load automatically
+        into the screen and wait for the first render; only the first few and then more will load as you scroll down. */}
+       <FlatList 
+        keyExtractor={(item) => item.id}
+        data={people}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => HandleTouchable(item.id)}>
+            <Text style={styles.listNames}> Hello Mr/Mss {item.name}</Text>
+          </TouchableOpacity>
+        )}
+       />
 
       <TextInput 
         style={styles.inputText}
         placeholder='write here ...'
         onChangeText={(val) => setName(val)}
-        multiline
+        // multiline
       />
       
       <View style={styles.buttonContainer}>
