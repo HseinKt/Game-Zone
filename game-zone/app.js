@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import react, {useState} from 'react';
+import Header from './components/header';
 
 export default function App() {
   const [name, setName] = useState("Hussein");
@@ -11,6 +12,7 @@ export default function App() {
 
   const HandleTouchable = (id) => {
     console.log(id);
+    //delete the pressed element by filtiring the touch button
     setPeople((itemPressed) => {
       return itemPressed.filter(item => item.id != id)
     })
@@ -28,47 +30,52 @@ export default function App() {
   ]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.boldText}>
-        <Text>Hello there! my name is {name}</Text>
+    <TouchableWithoutFeedback onPress={ () => {
+      Keyboard.dismiss();
+    }}>
+      <View style={styles.container}>
+        <Header />
+        <View style={styles.boldText}>
+          <Text>Hello there! my name is {name}</Text>
+        </View>
+
+        {/* ScrollView load all the items in the biginning and this is not helpfull when we have a large data */}
+        {/* <ScrollView>
+          {people.map((e) => {
+          return (
+            <View key={e.key}>
+              <Text style={styles.listNames}> Hello Mr/Mss {e.name}</Text>
+            </View>
+          )
+          })}
+        </ScrollView> */}
+
+        {/* Another way to scroll the items is using a flat list, and here not all the items load automatically
+          into the screen and wait for the first render; only the first few and then more will load as you scroll down. */}
+        <FlatList 
+          keyExtractor={(item) => item.id}
+          data={people}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => HandleTouchable(item.id)}>
+              <Text style={styles.listNames}> Hello Mr/Mss {item.name}</Text>
+            </TouchableOpacity>
+          )}
+        />
+
+        <TextInput 
+          style={styles.inputText}
+          placeholder='write here ...'
+          onChangeText={(val) => setName(val)}
+          // multiline
+        />
+        
+        <View style={styles.buttonContainer}>
+          <Button title='click here' onPress={handleButton}/>
+        </View>
+
+        <StatusBar style="auto" />
       </View>
-
-      {/* ScrollView load all the items in the biginning and this is not helpfull when we have a large data */}
-      {/* <ScrollView>
-        {people.map((e) => {
-        return (
-          <View key={e.key}>
-            <Text style={styles.listNames}> Hello Mr/Mss {e.name}</Text>
-          </View>
-        )
-        })}
-      </ScrollView> */}
-
-       {/* Another way to scroll the items is using a flat list, and here not all the items load automatically
-        into the screen and wait for the first render; only the first few and then more will load as you scroll down. */}
-       <FlatList 
-        keyExtractor={(item) => item.id}
-        data={people}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => HandleTouchable(item.id)}>
-            <Text style={styles.listNames}> Hello Mr/Mss {item.name}</Text>
-          </TouchableOpacity>
-        )}
-       />
-
-      <TextInput 
-        style={styles.inputText}
-        placeholder='write here ...'
-        onChangeText={(val) => setName(val)}
-        // multiline
-      />
-      
-      <View style={styles.buttonContainer}>
-        <Button title='click here' onPress={handleButton}/>
-      </View>
-
-      <StatusBar style="auto" />
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
