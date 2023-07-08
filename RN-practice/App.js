@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, TextInput, ScrollView, FlatList, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import react, {useState} from 'react';
 import Header from './components/header';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function App() {
   const [name, setName] = useState("Hussein");
@@ -57,7 +58,11 @@ export default function App() {
           data={people}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => HandleTouchable(item.id)}>
-              <Text style={styles.listNames}> Hello Mr/Mss {item.name}</Text>
+              <View style={styles.listNames}>
+                <MaterialIcons name="delete" size={20} color="black" />
+              
+                <Text style={styles.items}> Hello Mr/Mss {item.name}</Text>
+              </View>
             </TouchableOpacity>
           )}
         />
@@ -114,5 +119,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     color: 'black',
     fontSize: '20',
+    flexDirection: 'row',
+  },
+  items: {
+    marginLeft: 10,
   }
 });
